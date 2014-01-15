@@ -131,6 +131,10 @@ PRODUCT_PACKAGES += \
     libjni_mosaic \
     Torch
 
+# AOSP Launcher option (for Slim builds)
+PRODUCT_PACKAGES += \
+    Launcher3
+
 # Permissions files
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:system/etc/permissions/android.hardware.bluetooth.xml \
