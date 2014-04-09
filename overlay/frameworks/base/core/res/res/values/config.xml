@@ -255,4 +255,7 @@
     <!-- Disable lockscreen translucent decor by default -->
     <bool name="config_enableLockScreenTranslucentDecor">true</bool>
 
+    <!-- Use analog dock-connector if device is connected (auto-sensing) -->
+    <bool name="config_forceAnalogDeskDock">true</bool>
+    <bool name="config_forceAnalogCarDock">true</bool>
 </resources>
