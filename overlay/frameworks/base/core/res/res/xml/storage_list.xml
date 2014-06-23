@@ -44,6 +44,7 @@
                  android:primary="false"
                  android:removable="true"
                  android:allowMassStorage="true"
+                 android:externalApps="true"
                  android:maxFileSize="4096"/>
 </StorageList>
 
