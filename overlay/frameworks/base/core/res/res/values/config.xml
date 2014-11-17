@@ -256,10 +256,16 @@
     <bool name="config_enableLockScreenTranslucentDecor">true</bool>
 
     <!-- Device supports LED flashlight -->
-    <bool name="config_enableTorch">true</bool>
+    <add-resource type="bool" name="config_enableTorch">
+        <bool name="config_enableTorch">true</bool>
+    </add-resource>
 
     <!-- Use analog dock-connector if device is connected (auto-sensing) -->
-    <bool name="config_forceAnalogDeskDock">true</bool>
-    <bool name="config_forceAnalogCarDock">true</bool>
+    <add-resource type="bool" name="config_forceAnalogDeskDock">
+        <bool name="config_forceAnalogDeskDock">true</bool>
+    </add-resource>
+    <add-resource type="bool" name="config_forceAnalogCarDock">
+        <bool name="config_forceAnalogCarDock">true</bool>
+    </add-resource>
 </resources>
 
