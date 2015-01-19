@@ -134,7 +134,7 @@ BOARD_USES_ALSA_AUDIO := true
 BUILD_WITH_ALSA_UTILS := true
 TARGET_PROVIDES_LIBAUDIO := true
 BOARD_USE_MOTO_DOCK_HACK := true
-COMMON_GLOBAL_CFLAGS += -DMR0_AUDIO_BLOB -DNEEDS_VECTORIMPL_SYMBOLS
+TARGET_RELEASE_CPPFLAGS += -DNEEDS_VECTORIMPL_SYMBOLS
 BOARD_HAVE_PRE_KITKAT_AUDIO_BLOB := true
 
 # Bluetooth
@@ -223,7 +223,6 @@ COMMON_GLOBAL_CFLAGS += -DQCOM_LEGACY_UIDS
 # OTA Packaging
 TARGET_PROVIDES_RELEASETOOLS := true
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/motorola/omap4-common/releasetools/common_ota_from_target_files
-COMMON_GLOBAL_CFLAGS += -DRECOVERY_CANT_USE_CONFIG_EXT4_FS_XATTR
 
 # Bootanimation
 TARGET_BOOTANIMATION_PRELOAD := true
@@ -259,6 +258,7 @@ BOARD_SEPOLICY_UNION += \
     init_shell.te \
     mediaserver.te \
     modemlog.te \
+    msp430.te \
     netd.te \
     property.te \
     pvrsrvinit.te \
