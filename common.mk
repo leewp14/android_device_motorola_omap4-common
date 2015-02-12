@@ -72,6 +72,8 @@ PRODUCT_PACKAGES += \
 # Modem
 PRODUCT_PACKAGES += \
     libaudiomodemgeneric \
+    motorild \
+    motorilc \
     rild \
     radiooptions
 
@@ -235,7 +237,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.demo.hdmirotationlock=true \
     persist.sys.root_access=1 \
     ro.product.use_charge_counter=1 \
-    persist.sys.usb.config=mtp,adb \
+    persist.sys.usb.config=mtp \
     ro.setupwizard.enable_bypass=1
 
 # Media
