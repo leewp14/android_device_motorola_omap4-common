@@ -107,6 +107,26 @@ static ssize_t show_frequency_limit(struct device *dev,
 	return sprintf(buf, "%lu\n", sfd.freq_limit);
 }
 
+/*
+ * sysfs interface to store sgxfreq frequency limit
+ * author: ketut.kumajaya@gmail.com
+*/
+static ssize_t store_frequency_limit(struct device *dev,
+				    struct device_attribute *attr,
+				    const char *buf, size_t count)
+{
+	unsigned long freq_limit;
+
+	if (kstrtoul(buf, 0, &freq_limit)) {
+		pr_err("sgxfreq: failed storing frequency_limit\n");
+		return -EINVAL;
+	}
+
+	freq_limit = sgxfreq_set_freq_limit(freq_limit);
+	pr_info("sgxfreq: frequency_limit=%lu\n", freq_limit);
+	return count;
+}
+
 static ssize_t show_frequency(struct device *dev,
 			      struct device_attribute *attr,
 			      char *buf)
@@ -169,7 +189,7 @@ static ssize_t store_governor(struct device *dev,
 
 static DEVICE_ATTR(frequency_list, 0444, show_frequency_list, NULL);
 static DEVICE_ATTR(frequency_request, 0444, show_frequency_request, NULL);
-static DEVICE_ATTR(frequency_limit, 0444, show_frequency_limit, NULL);
+static DEVICE_ATTR(frequency_limit, 0644, show_frequency_limit, store_frequency_limit);
 static DEVICE_ATTR(frequency, 0444, show_frequency, NULL);
 static DEVICE_ATTR(governor_list, 0444, show_governor_list, NULL);
 static DEVICE_ATTR(governor, 0644, show_governor, store_governor);
@@ -187,6 +207,24 @@ static const struct attribute *sgxfreq_attributes[] = {
 };
 
 /************************ end sysfs interface ************************/
+
+static unsigned long __sgxfreq_get_max_safe_freq(void)
+{
+	int i;
+	unsigned long reference_freq = SYS_SGX_CLOCK_SPEED;
+	unsigned long freq;
+
+	if (!cpu_is_omap443x())
+		reference_freq = OMAP446X_447X_REFERNECE_FREQUENCY;
+
+	for (i = sfd.freq_cnt - 1; i >= 0; i--) {
+		freq = sfd.freq_list[i];
+		if (freq <= reference_freq)
+			return freq;
+	}
+
+	return reference_freq;
+}
 
 static void __set_freq(void)
 {
@@ -314,7 +352,7 @@ int sgxfreq_init(struct device *dev)
 	rcu_read_unlock();
 
 	mutex_init(&sfd.freq_mutex);
-	sfd.freq_limit = sfd.freq_list[sfd.freq_cnt - 1];
+	sfd.freq_limit = __sgxfreq_get_max_safe_freq();
 	sgxfreq_set_freq_request(sfd.freq_list[sfd.freq_cnt - 1]);
 	sfd.sgx_data.clk_on = false;
 	sfd.sgx_data.active = false;

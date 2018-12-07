@@ -40,13 +40,35 @@
 
 # Figure out the version of Android we're building against.
 #
-PLATFORM_VERSION := $(shell \
-	if [ -f $(TARGET_ROOT)/product/$(TARGET_PRODUCT)/system/build.prop ]; then \
-		cat $(TARGET_ROOT)/product/$(TARGET_PRODUCT)/system/build.prop | \
-			grep ^ro.build.version.release | cut -f2 -d'=' | cut -f1 -d'-'; \
-	else \
-		echo 4.0.3; \
-	fi)
+ifeq ($(strip $(PLATFORM_VERSION)),)
+BUILD_PROP := $(ANDROID_PRODUCT_OUT)/system/build.prop
+BUILD_DEFS := $(ANDROID_BUILD_TOP)/build/core/version_defaults.mk
+ifneq ($(wildcard $(BUILD_PROP)),)
+# Extract version.release from the build.prop file. If it's not in the build.prop,
+# the Make variables won't be defined, and fallback handling will take place.
+#
+# $(eval $(shell cat $(BUILD_PROP) | grep '^ro.build.version.release=' | \
+# 	sed -e 's,ro.build.version.release,PLATFORM_VERSION,'))
+PLATFORM_VERSION := $(shell grep '^ro.build.version.release=' \
+	$(BUILD_PROP) | cut -f2 -d'=' | cut -f1 -d'-')
+else ifneq ($(wildcard $(BUILD_DEFS)),)
+$(warning *** No device prop file ($(BUILD_PROP)). Extracting from \
+	build/core/version_defaults.mk)
+# Android version information doesn't permeate here. Set it up manually,
+# but avoid including the whole of core/version_defaults.mk
+#
+# $(eval $(shell cat $(ANDROID_BUILD_TOP)/build/core/version_defaults.mk |\
+# 	grep 'PLATFORM_VERSION\s.*='))
+PLATFORM_VERSION := $(strip $(shell grep 'PLATFORM_VERSION\s.*=' \
+	$(BUILD_DEFS) | cut -f2 -d'=' | cut -f1 -d'-'))
+else
+$(warning *** No device prop file ($(BUILD_PROP)) or build env \
+	($(BUILD_DEFS)). Falling back to ICS default)
+PLATFORM_VERSION := 4.0.3
+endif
+endif
+
+$(info PLATFORM_VERSION=$(PLATFORM_VERSION))
 
 define version-starts-with
 $(shell echo $(PLATFORM_VERSION) | grep -q ^$(1); \
