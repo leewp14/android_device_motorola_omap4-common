@@ -178,7 +178,7 @@ $(call directory-must-exist,$(TOP)/eurasiacon/build/linux2/$(PVR_BUILD_DIR))
 BUILD	?= release
 # TI: Added SGX type to binary build location so builds for different GPUs
 #     with the same build directory are put in different places
-OUT		?= $(TOP)/eurasiacon/binary2_$(PVR_BUILD_DIR)_$(BUILD)
+OUT		?= $(TOP)/eurasiacon/binary2_$(SGXCORE)_$(SGX_CORE_REV)_$(PVR_BUILD_DIR)_$(BUILD)
 override OUT := $(if $(filter /%,$(OUT)),$(OUT),$(TOP)/$(OUT))
 
 CONFIG_MK			:= $(OUT)/config.mk
@@ -512,9 +512,6 @@ $(eval $(call TunableBothConfigC,PVRSRV_NEED_PVR_ASSERT,))
 $(eval $(call TunableBothConfigC,PVRSRV_NEED_PVR_TRACE,))
 $(eval $(call TunableBothConfigC,SUPPORT_SECURE_33657_FIX,))
 $(eval $(call TunableBothConfigC,SUPPORT_ION,))
-ifeq ($(USE_TI_LIBION),1)
-$(eval $(call TunableBothConfigC,SUPPORT_TI_LIBION,1))
-endif
 $(eval $(call TunableBothConfigC,SUPPORT_HWRECOVERY_TRACE_LIMIT,))
 $(eval $(call TunableBothConfigC,SUPPORT_PVRSRV_GET_DC_SYSTEM_BUFFER,1))
 $(eval $(call TunableBothConfigC,SUPPORT_NV12_FROM_2_HWADDRS,))
@@ -551,9 +548,7 @@ endif
 $(eval $(call TunableKernelConfigC,CONFIG_PVR_PROC_FS_HEAP_ALLOC_DEBUG,))
 
 $(eval $(call TunableBothConfigMake,SUPPORT_ION,))
-ifeq ($(USE_TI_LIBION),1)
-$(eval $(call TunableBothConfigMake,SUPPORT_TI_LIBION,1))
-endif
+
 
 $(eval $(call TunableBothConfigMake,OPTIM,))
 
