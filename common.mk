@@ -18,6 +18,10 @@
 
 COMMON_FOLDER := device/motorola/omap4-common
 
+# Boot animation
+TARGET_SCREEN_HEIGHT := 960
+TARGET_SCREEN_WIDTH := 540
+
 # The gps config appropriate for this device
 PRODUCT_COPY_FILES += \
     $(COMMON_FOLDER)/prebuilt/bin/pdsbackup.sh:system/bin/pdsbackup.sh \
